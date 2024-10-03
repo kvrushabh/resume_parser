@@ -1,0 +1,41 @@
+<!-- resumes/list.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume List</title>
+</head>
+<body>
+    <h2>Resumes</h2>
+    <form method="GET">
+        <label for="experience">Minimum Experience (years):</label>
+        <input type="number" id="experience" name="experience" value="{{ request.GET.experience }}">
+
+        <label for="skills">Skills (comma separated):</label>
+        <input type="text" id="skills" name="skills" value="{{ request.GET.skills }}">
+
+        <button type="submit">Filter</button>
+    </form>
+
+    <ul>
+        {% for resume in resumes %}
+        <li>
+            <strong>Name:</strong> {{ resume.name }}<br>
+            <strong>Email:</strong> {{ resume.email }}<br>
+            <strong>Phone:</strong> {{ resume.phone }}<br>
+            <strong>Experience:</strong> {{ resume.experience }} years<br>
+            <strong>Skills:</strong> {{ resume.skills }}<br>
+            <strong>Education:</strong> {{ resume.education }}<br>
+            <strong>Designation:</strong> {{ resume.job_title }}<br>
+            <strong>Companies Worked:</strong> {{ resume.companies_worked }}<br>
+            <strong>Certifications:</strong> {{ resume.certifications }}<br>
+            <strong>Location:</strong> {{ resume.location }}<br>
+            <strong>Languages:</strong> {{ resume.Languages }}<br>
+        </li>
+        {% empty %}
+        <li>No resumes found.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

@@ -1,0 +1,19 @@
+# Virtual environment
+env/
+
+# Byte-compiled / optimized / DLL files
+*.pyc
+__pycache__/
+
+# SQLite database
+db.sqlite3
+
+# Media and static files
+staticfiles/
+
+# IDE and editor config files
+.idea/
+.vscode/
+
+# Temporary files and backup files
+*~
