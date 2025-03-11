@@ -1,0 +1,210 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Baloo+Bhai|Bree+Serif&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v13.0" nonce="JQzKKLep"></script>    
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,800">
+    <title>{% block title %}  {% endblock title %}</title>
+    <style>
+
+    .utility #logout a{
+        text-decoration: none;
+        color: green;
+    }
+    
+    .utility #logout a:hover{
+        color: white;
+    }
+      
+    a.nav-link{
+        padding: 1px;
+    }
+
+    @media screen and (max-width: 768px){
+    .utility{
+        padding: 0rem 1rem;
+        margin-bottom: 1rem;
+      }
+    }
+
+    </style>
+    
+    {% block css %}  {% endblock css %}
+</head>
+
+<body>
+
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/" style="margin-right: 3px;">ResumeParser</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+          {% if user.is_superuser %}
+          <li class="nav-item">
+            <a class="nav-link {% block active1 %}  {% endblock active1 %}" style="padding: 4px;" aria-current="page" href="/resumes">Resumes</a>
+          </li>
+          {% endif %}
+
+        </ul>
+      </div>
+
+      <div class="utility d-flex">
+        
+          <form class="d-flex" method="get" action="search">
+            <input class="form-control me-2" type="search" placeholder="Search" id="query" name='query' aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+          </form>
+          
+          {% if user.is_authenticated %}
+          <span id="welcome" style="color: white; padding: 6px 0px; margin: 0px 8px;"> Hi, <b>{{request.user}}</b> </span>
+          <button class="btn btn-outline-success" id="logout" type="logout"><a href="users/logout">Logout</a></button>
+
+          <a href="/profile" class="nav-link active px-1 py-1" style="margin-left: 0.5rem" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="contact">
+              <img src="{% static 'blog/images/profile.jpg' %}" class="bi" width="33" height="31" role="img" aria-label="contact"></img>
+          </a>
+          
+          {% else %}
+
+          <!-- Button for Signup form -->
+          <button type="button" data-bs-toggle="modal" data-bs-target="#LogIn" class="btn btn-success mx-2">
+            LogIn
+          </button>
+          
+          <!-- Button for login form -->
+          <button type="button" data-bs-toggle="modal" data-bs-target="#Signup" class="btn btn-success" style= "margin-left: 1px;">
+          SignUp
+          </button>
+          {% endif %}
+        
+      </div>
+    </nav>
+
+
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+      <strong>Message :</strong> {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true"></span>
+      </button>
+    </div>
+    {% endfor %}
+
+
+<!-- SignUp Modal -->
+<div class="modal fade" id="Signup" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog" style="max-width: 50vw;">
+    <div class="modal-content" style="width: 50vw;">
+      <div class="modal-header">
+        <h5 class="modal-title" id="Signup">Sign Up Page</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <form action="users/signup" method="POST">{% csrf_token %}
+
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" class="form-control" id="username" name="user_name" placeholder="Choose a unique username" required> 
+          </div>
+
+          <div class="form-group">
+            <label for="fname">First Name</label>
+            <input type="text" class="form-control" id="fname" name="first_name" placeholder="Enter Your First Name" required>
+          </div>
+
+          <div class="form-group">
+            <label for="lname">Last Name</label>
+            <input type="text" class="form-control" id="lname" name="last_name" placeholder="Enter Your Last Name" required>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email address</label>
+            <input type="email" class="form-control" id="email" name="email_id" placeholder="name@example.com" required>
+          </div>
+
+          <div class="form-group">
+            <label for="pass1">Choose a password</label>
+            <input type="password" class="form-control" id="pass1" name="password" placeholder="Choose Your Password" required>
+          </div>
+
+          <div class="form-group">
+            <label for="pass2">Confirm Password</label>
+            <input type="password" class="form-control" id="pass2" name="Confirm Password" placeholder="Enter your password again" required>
+          </div>
+     
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="margin: 1rem;">Close</button>
+          <button type="submit" class="btn btn-success" style="margin: 1rem;">SignUp</button>
+        </form> 
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- LogIn Modal -->
+<div class="modal fade" id="LogIn" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="LogIn">Login Page</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="background-color: white"></button>
+      </div>
+      <div class="modal-body">
+        <form action="users/login" method="POST">{% csrf_token %}
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" class="form-control" id="loginusername" name="loginusername" placeholder="Enter username">
+          </div>
+          <div class="form-group my-2">
+            <label for="pass">Enter your password </label>
+            <input type="password" class="form-control" id="pass" name="loginpassword" placeholder="Enter your password ">
+          </div>
+          <div style="text-align: right"><a href="/forget-password">Forgot Password</a></div>
+          {% comment %} <div class="g-recaptcha" data-sitekey="6Ld-W64eAAAAABbSkbSwe_mvMz4wcIQwTquPMyK5"></div> {% endcomment %}
+            <button type="submit" class="btn btn-success" style="margin: 1rem;">LogIn</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% block body %}  {% endblock body %}
+
+{% block js %}   
+{% endblock js %}
+
+
+    <!-- Optional JavaScr ipt; choose one of the two! -->
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    {% comment %} <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"crossorigin="anonymous"></script> {% endcomment %}
+
+    <!-- recptcha script -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+            integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
+            integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13"
+            crossorigin="anonymous"></script>
+
+  </body>
+</html>
